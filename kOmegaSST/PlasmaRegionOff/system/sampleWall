@@ -1,0 +1,32 @@
+/*--------------------------------*- C++ -*----------------------------------*\
+| =========                 |                                                 |
+| \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox           |
+|  \\    /   O peration     | Version:  v2412                                 |
+|   \\  /    A nd           | Website:  www.openfoam.com                      |
+|    \\/     M anipulation  |                                                 |
+\*---------------------------------------------------------------------------*/
+
+sampleWall
+{
+	type            surfaceFieldValue;
+	libs            ("libfieldFunctionObjects.so");
+
+	writeControl    writeTime;
+	writeFields     true;
+
+	surfaceFormat   raw;
+	regionType      patch;
+	name            naca0012;
+
+	operation       none;
+
+	fields
+	(
+    		p
+		static(p)_coeff
+    		yPlus
+    		wallShearStress
+	);
+}
+
+// ************************************************************************* //

@@ -1,0 +1,56 @@
+/*--------------------------------*- C++ -*----------------------------------*\
+| =========                 |                                                 |
+| \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox           |
+|  \\    /   O peration     | Version:  v2412                                 |
+|   \\  /    A nd           | Website:  www.openfoam.com                      |
+|    \\/     M anipulation  |                                                 |
+\*---------------------------------------------------------------------------*/
+
+forceCoeffs1
+{
+    type            forceCoeffs;
+
+    libs            (forces);
+
+    writeControl    runTime;
+    writeInterval    0.001; 
+
+    log             yes;
+
+    patches         (naca0012);
+    rho             rhoInf;      // Indicates incompressible
+    rhoInf          1;           // Required when rho = rhoInf
+    liftDir         (-0.173648178 0.984807753 0); //AOA Dependent! 10 AOA rn
+    dragDir         (0.984807753 0.173648178 0);//AOA Dependent! 10 AOA rn
+    CofR            (0.025 0 0);  //0.25 of x/c (from NASA), based at (0 0 0)
+    pitchAxis       (0 0 1);
+    magUInf         7.95;		// free stream velocity
+					//same as U in 0/include/initial directory
+    lRef            0.1;        // chord length [m]
+    Aref            0.00538516;    // = chord*span = 0.1*0.0538516
+}
+
+
+binFieldLiftDrag
+{
+    type                    binField;
+    libs                    (fieldFunctionObjects);
+    binModel                singleDirectionUniformBin;
+    fields                  (forceCoeff);   // Binning all coifs
+    patches                 (naca0012);             // Patch where the airfoil is
+    decomposePatchValues    true;
+    CofR                    (0.025 0 0);             //CoR, same as before
+    
+    binData
+    {
+        nBin        10;                          // Number of bins
+        direction   (1 0 0);                     // Binning direction (X-axis/along chord)
+        cumulative  yes;                          // Cumulative binning (accumulates)
+    }
+    writeControl            writeTime;             // Write data at each timestep
+   // writeInterval    0.1; // should be same as controlDict writeInterval
+}
+
+
+
+// ************************************************************************* //

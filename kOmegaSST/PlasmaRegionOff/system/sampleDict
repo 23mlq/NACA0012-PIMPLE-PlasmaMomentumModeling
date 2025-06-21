@@ -1,0 +1,41 @@
+/*--------------------------------*- C++ -*----------------------------------*\
+| =========                 |                                                 |
+| \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox           |
+|  \\    /   O peration     | Version:  v2412                                 |
+|   \\  /    A nd           | Website:  www.openfoam.com                      |
+|    \\/     M anipulation  |                                                 |
+\*---------------------------------------------------------------------------*/
+FoamFile
+{
+    version     2.0;
+    format      ascii;
+    class       dictionary;
+    object      sampleDict;
+}
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+type            surfaces;
+writeControl    writeTime;
+
+interpolationScheme cellPoint;
+surfaceFormat   vtk;
+
+surfaces
+(
+    airfoilSurface
+    {
+        type        patch;
+        patches     (naca0012);  // <- Use your real patch name
+        interpolate true;
+    }
+);
+
+fields
+(
+    p
+    static(p)_coeff
+    wallShearStress
+    yPlus
+);
+
+// ************************************************************************* //

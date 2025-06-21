@@ -1,0 +1,171 @@
+/*--------------------------------*- C++ -*----------------------------------*\
+| =========                 |                                                 |
+| \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox           |
+|  \\    /   O peration     | Version:  v2412                                 |
+|   \\  /    A nd           | Website:  www.openfoam.com                      |
+|    \\/     M anipulation  |                                                 |
+\*---------------------------------------------------------------------------*/
+FoamFile
+{
+    version     2.0;
+    format      ascii;
+    class       dictionary;
+    object      controlDict;
+}
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+application     pimpleFoam;
+
+startFrom       startTime;
+
+startTime       0;
+
+stopAt          endTime;
+
+endTime         2;
+
+//for courant number
+deltaT		0.05;
+adjustTimeStep	yes;
+meanCo		1.0;
+maxCo		1.0;//Make 1 for proper run
+maxDeltaT	0.05;	
+
+
+writeControl    runTime;
+
+writeInterval   0.05;
+
+purgeWrite      0;
+
+writeFormat     binary;
+
+writePrecision  6;
+
+writeCompression off;
+
+timeFormat      general;
+
+timePrecision   6;
+
+runTimeModifiable true;
+
+functions
+{
+    #include "streamLines"
+    #include "wallBoundedStreamLines"
+    #include "sampleWall"
+    #include "sampleDict"
+    #include "cuttingPlane"
+    #include "forceCoeffs"
+    #include "ensightWrite"
+
+    #include "solverInfo"
+    #include "graphFunctionObject"
+    #include "foamReport"
+
+fieldAverage1
+    {
+    type        fieldAverage;
+    functionObjectLibs ("libfieldFunctionObjects.so");
+    fields
+        (
+            U
+            {
+                mean        yes;
+                prime2Mean  no;
+                base        time;
+            }
+            p
+            {
+                mean        yes;
+                prime2Mean  no;
+                base        time;
+            }
+        );
+    writePrecision  8;
+    writeToFile     true;
+    useUserTime     true;
+    region          region0;
+    enabled         true;
+    log             true;
+    timeStart       0;
+    executeControl  writeTime;
+    writeControl    writeTime;
+    }
+
+yPlus1
+    {
+    // Mandatory entries (unmodifiable)
+    type            yPlus;
+    libs            (fieldFunctionObjects);
+
+    // Optional (inherited) entries
+    writePrecision  8;
+    writeToFile     true;
+    useUserTime     true;
+    region          region0;
+    enabled         true;
+    log             true;
+    timeStart       0;
+    executeControl  writeTime;
+    writeControl    writeTime;
+    }
+
+pressure1
+    {
+    // Mandatory entries (unmodifiable)
+    type            pressure;
+    libs            (fieldFunctionObjects);
+
+    // Mandatory entries (runtime modifiable)
+    mode            staticCoeff;
+
+    // Optional entries (runtime modifiable)
+    p               p;
+    U               u;
+    rho             rhoInf;
+    rhoInf          1.0; // enabled if rho=rhoInf
+    pRef            0.0;
+    hydroStaticMode none;
+    pInf            0.0; 
+    UInf            (7.95 0 0);
+
+    writePrecision  8;
+    writeToFile     true;
+    useUserTime     true;
+    region          region0;
+    enabled         true;
+    log             true;
+    timeStart       0;
+    executeControl  writeTime;
+    writeControl    writeTime;
+    }
+
+wallShearStress1
+{
+    type            wallShearStress;
+    libs            (fieldFunctionObjects);
+
+    writePrecision  8;
+    writeToFile     true;
+    useUserTime     true;
+    region          region0;
+    enabled         true;
+    log             true;
+    timeStart       0;
+    executeControl  writeTime;
+    writeControl    writeTime;
+}
+
+}
+
+//PIMPLE SETTINGS
+PIMPLE
+{
+	nOuterCorrectors 1; // Set to 1 for PISO mode
+	nCorrectors	2; // Number of corrector steps (can be changed)
+}
+
+
+// ************************************************************************* //

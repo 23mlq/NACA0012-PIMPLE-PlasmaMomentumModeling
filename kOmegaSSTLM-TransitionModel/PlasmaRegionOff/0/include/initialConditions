@@ -1,0 +1,15 @@
+/*--------------------------------*- C++ -*----------------------------------*\
+| =========                 |                                                 |
+| \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox           |
+|  \\    /   O peration     | Version:  v2412                                 |
+|   \\  /    A nd           | Website:  www.openfoam.com                      |
+|    \\/     M anipulation  |                                                 |
+\*---------------------------------------------------------------------------*/
+
+flowVelocity         (7.829221636 1.380503012 0);//CHANGE, Depends on AOA, rn AOA10
+pressure             0; // do not change
+turbulentKE          0.000213;
+turbulentOmega       3.809302; //CHECK
+turbulentViscosity   0.0000559;
+//Refer to Excel Sheet Cases, Re = 53000, 10AOA
+// ************************************************************************* //

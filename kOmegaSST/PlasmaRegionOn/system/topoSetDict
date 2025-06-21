@@ -1,0 +1,75 @@
+/*--------------------------------*- C++ -*----------------------------------*\
+| =========                 |                                                 |
+| \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox           |
+|  \\    /   O peration     | Version:  v2412                                 |
+|   \\  /    A nd           | Website:  www.openfoam.com                      |
+|    \\/     M anipulation  |                                                 |
+\*---------------------------------------------------------------------------*/
+FoamFile
+{
+    version     2.0;
+    format      ascii;
+    class       dictionary;
+    object      topoSetDict;
+}
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+actions
+( 
+
+/*//Plasma Old One, flat rectangle
+{
+	name	plasmaCellSet;
+	type	cellSet;
+	action	new;
+	source	boxToCell;
+	sourceInfo
+	{
+    		
+    		// Box coordinates (min max) in meters for 10% x/c
+    		box (0.01 0.0046828 -0.014955) (0.03 0.008128 0.014955);
+    		// X:(20mm length streamwise)
+    		// Y:(3.5mm height)
+    		// Z:(2D, so automatic extrusion
+
+	}
+}*/
+
+//Plasma
+{
+	name	plasmaCellSet;
+	type	cellSet;
+	action	new;
+	source	rotatedBoxToCell;
+	/*sourceInfo The one I tried
+	{
+		origin (0 0.0029954 0.031337); //10%x/c
+		i      (0.02 0.0033748 0);
+		j      (0 0.0035 0);
+		k      (0 0 -0.062674);
+	}*/
+	sourceInfo
+	{
+		//The one,10%x/c AKA leading edge-THIS ONE IS THE ONE BEING USED
+   		origin  (0 0.0029954 -0.0269258); // Origin (x, y, z)
+  	 	i       (0.02 0.0033748 0);       // i vector (x, y, z) (20mm)
+   	 	j       (-0.000499 0.002956 0);   // j vector (vertical height) (3mm)
+   	 	k       (0 0 0.0538516);          // k vector (z extrusion)
+	}
+}
+
+{
+	name plasma;
+	type cellZoneSet;
+	action new;
+	source setToCellZone;
+	sourceInfo
+	{
+		set plasmaCellSet;
+	}
+}
+
+
+);
+
+// ************************************************************************* //
