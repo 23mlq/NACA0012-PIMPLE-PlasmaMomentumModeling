@@ -1,5 +1,4 @@
 
-/*--------------------------------------------------------------------------*\
 
 Created on Fri June 20 2025
 
@@ -36,4 +35,3 @@ Currently set to 10 AOA. To vary AOA, modify
 Then modify system/forceCoeffs and modify lift, and drag x-y
 components.
 
-/*--------------------------------------------------------------------------*\
